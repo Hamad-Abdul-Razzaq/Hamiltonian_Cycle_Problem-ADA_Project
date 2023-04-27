@@ -154,8 +154,8 @@ def HC_HA(G: int, n: int) -> bool:
 
 
 def driver_code():
-    vlb = 5
-    vub = 7
+    vlb = 8
+    vub = 12
     f = dict()
     x = list(range(vlb, vub+1))
     y = [round(0.05*i, 2) for i in range(0,21)]

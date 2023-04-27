@@ -44,8 +44,8 @@ def HC_DP(G: int, n: int) -> bool:
     return False
 
 def driver_code():
-    vlb = 8
-    vub = 8
+    vlb = 12
+    vub = 12
     f = dict()
     x = list(range(vlb, vub+1))
     y = [round(0.05*i, 2) for i in range(0,21)]
@@ -53,7 +53,7 @@ def driver_code():
     for v in x:
         for d in y:
             total_time = 0
-            total_iter = 1000
+            total_iter = 100
             for _ in range(total_iter):
                 G = Generate_Graph(v, d)
                 start_time = perf_counter()
