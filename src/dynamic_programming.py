@@ -42,21 +42,6 @@ def HC_DP(G: int, n: int) -> bool:
         if MEMO[(v, tuple(x))]:
             return True
     return False
-    # for v in x:
-    #     if MEMO[(v, tuple(x))] > 0:
-    #         return True
-    # return False
-    # for v in x:
-    #     for S in subsets:
-    #         if v in S:
-    #             if MEMO[(v, S)] > 0:
-    #                 S_prime = list(S)
-    #                 S_prime.remove(v)
-    #                 S_prime = tuple(S_prime)
-    #                 for u in S_prime:
-    #                     if u in G[v] and MEMO[(u, S_prime)] > 0:
-    #                         return True
-    # return False
 
 def driver_code():
     vlb = 1
