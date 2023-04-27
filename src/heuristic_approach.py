@@ -19,15 +19,143 @@ def Generate_Graph(n: int, d: int) -> dict:
                     G[k].append(j)
     return G
 
-def HC_HA(G: int, n: int, E: int) -> bool:
-    pass
+
+def rotational_transformation(path: list, G: dict) -> list:
+    e = path[-1]
+    b = None
+    for j in path:
+        if j in G[e] and j!= path[-2]:
+            b = j
+    if b == None:
+        return []
+    else:
+        new_path = []
+        idx = 0
+        for i in path:
+            new_path.append(i)
+            if i == b:
+                break
+            idx += 1
+        new_path.extend(path[len(path)-1:idx:-1])
+        if new_path == path:
+            return []
+        else:
+            return new_path
+
+
+def unreachable(path: list, v: int, G:int) -> bool:
+    for i in G[v]:
+        if not(i in path) :
+            reachable = False
+            for j in G[i]:
+                if not(j in path) :
+                    reachable = True
+            if not(reachable):
+                return True
+    return False
+
+def PhaseI(G: int, n:int, Va: list, Vd: list, idx: int, path: list) -> list:
+    vs = Vd[idx][0]
+    if not(vs in path):
+        path.append(vs)
+    # print("in", path)
+    i = 0
+    while i < len(Va):
+        if Va[i][0] in G[path[-1]]:
+            vi = Va[i][0]
+            # print(not(unreachable(path, vi, G)), vi, path)
+            if not(unreachable(path, vi, G)) and not (vi in path):
+                path.append(vi)
+                vs = vi
+                i += 1
+            else:
+                i += 1
+        else:
+            i += 1
+    return path
+
+def PhaseIII(G: dict, deg: dict, P: list) -> bool:
+    done_so_far = [P.copy()]
+    while True:
+        # print("MF3")
+        if P[0] in G[P[-1]]:
+            # print(P)
+            return True
+        if deg[P[0]] > deg[P[-1]]:
+            P.reverse()
+        P = rotational_transformation(P, G)
+        if P in done_so_far:
+            return False
+        else:
+            done_so_far.append(P)
+        # print('r',P)
+        if P == []:
+            return False
+        
+
+def HC_HA(G: int, n: int) -> bool:
+    deg = {i:len(G[i]) for i in G}
+    Va = list(deg.items())
+    for i in range(len(Va)):
+        for j in range(len(Va)-i-1):
+            if Va[j][1] > Va[j+1][1]:
+                tmp = Va[j+1]
+                Va[j+1] = Va[j]
+                Va[j] = tmp
+    Vd = Va.copy()
+    Vd.reverse()
+    idx = 0
+    path = []
+    PhaseI(G, n, Va, Vd, idx, path)
+    # print('l', path)
+    if len(path) == n:
+        return PhaseIII(G, deg, path)
+    else:
+        max_ = path.copy()
+        sz = len(path)
+        for i in range(len(Vd)):
+            tmp = []
+            # print("Once")
+            path = PhaseI(G, n, Va, Vd, i, tmp)
+            # print('l', path)
+            if len(path) > sz:
+                max_ = path.copy()
+                sz = len(max_)
+        P = max_
+        # print("l", P)
+        done_so_far = [P.copy()]
+        while len(P) != n:
+            if deg[P[0]] > deg[P[-1]]:
+                P.reverse()
+            P = rotational_transformation(P, G)
+            if P in done_so_far:
+                return False
+            else:
+                done_so_far.append(P)
+            # print("r", P)
+            if P == []:
+                # print("return it")
+                return False
+            else:
+                # print(P)
+                PhaseI(G, n, Va, Vd, 0, P)
+        # print("f", P)
+        Ph = P.copy()
+        if Ph[0] in G[Ph[-1]]:
+            # print(Ph)
+            return True
+        else:
+            return PhaseIII(G, deg, Ph)
+        
+        
+
 
 
 
 
 def driver_code():
-    vlb = 1
-    vub = 6
+    vlb = 5
+    vub = 7
     f = dict()
     x = list(range(vlb, vub+1))
     y = [round(0.05*i, 2) for i in range(0,21)]
@@ -49,7 +177,7 @@ def driver_code():
     X = np.array(list(list(i for i in range(vlb, vub+1)) for _ in range(len(y))))
     Y = np.array(list(list(i for j in range(vlb, vub+1)) for i in y))
     Z = np.array(list(list(0.0005 for _ in range(vlb, vub+1)) for _ in range(len(y))))
-    # print(f)
+    print(f)
     for i in range(len(y)):
         for j in range(len(x)):
             Z[i][j] = f[(X[i][j], Y[i][j])]
@@ -66,4 +194,8 @@ def driver_code():
     ax.set_zlabel("Time Taken")
     plt.show()
 
-# driver_code()
+driver_code()
+
+# G = Generate_Graph(3, 0.4)
+# print(G)
+# print(HC_HA(G, 3))

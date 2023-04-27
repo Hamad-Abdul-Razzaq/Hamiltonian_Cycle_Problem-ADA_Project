@@ -50,8 +50,8 @@ def HC_Check(G: dict, n: int, lst:list):
     return False
 
 def driver_code() -> None:
-    vlb = 1
-    vub = 6
+    vlb = 8
+    vub = 8
     f = dict()
     x = list(range(vlb, vub+1))
     y = [round(0.05*i, 2) for i in range(0,21)]
@@ -59,8 +59,10 @@ def driver_code() -> None:
     for v in x:
         for d in y:
             total_time = 0
-            total_iter = 1000
+            total_iter = 100
+            print(v, d)
             for _ in range(total_iter):
+                print(_)
                 G = Generate_Graph(v, d)
                 start_time = perf_counter()
                 HC_BF(G, v)
@@ -79,7 +81,7 @@ def driver_code() -> None:
             Z[i][j] = f[(X[i][j], Y[i][j])]
     # print(X)
     # print(Y)
-    # print(Z)
+    print(f)
     fig = plt.figure()
     ax = plt.axes(projection = '3d')
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='viridis', edgecolor='none')
@@ -91,4 +93,6 @@ def driver_code() -> None:
     plt.show()
     
 driver_code()
+# G = {1: [2, 4], 2: [1, 3, 4], 3: [2, 4], 4: [1, 2, 3]}
+# print(HC_BF(G, 4))
     

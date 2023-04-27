@@ -44,8 +44,8 @@ def HC_DP(G: int, n: int) -> bool:
     return False
 
 def driver_code():
-    vlb = 1
-    vub = 6
+    vlb = 8
+    vub = 8
     f = dict()
     x = list(range(vlb, vub+1))
     y = [round(0.05*i, 2) for i in range(0,21)]
@@ -74,6 +74,7 @@ def driver_code():
     # print(X)
     # print(Y)
     # print(Z)
+    print(f)
     fig = plt.figure()
     ax = plt.axes(projection = '3d')
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='viridis', edgecolor='none')
@@ -85,3 +86,5 @@ def driver_code():
     plt.show()
 
 driver_code()
+# G = {1: [2, 4], 2: [1, 3, 4], 3: [2, 4], 4: [1, 2, 3]}
+# print(HC_DP(G, 4))
